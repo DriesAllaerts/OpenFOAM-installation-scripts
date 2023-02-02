@@ -8,7 +8,6 @@ mkdir -p $inst_loc
 cd $inst_loc
 
 # Get OpenFOAM-6
-echo Cloning OpenFOAM-6
 git clone https://github.com/OpenFOAM/OpenFOAM-6.git
 
 # Load relevant modules
@@ -31,4 +30,9 @@ wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scrip
 mv scotch-config-DelftBlue etc/config.sh/scotch
 
 # Compile OpenFOAM-6
+echo Compiling OpenFOAM
+echo ------------------
+echo Running compilation in the background
+echo Check with $ jobs and abort with $ kill
+echo See progress with tail -f build.log
 ./Allwmake > build.log 2>&1 &
