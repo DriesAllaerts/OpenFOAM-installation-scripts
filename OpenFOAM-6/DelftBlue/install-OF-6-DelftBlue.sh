@@ -22,10 +22,13 @@ module load scotch
 module load flex
 module load gmp
 
-# Compile OpenFOAM-6
+# Launch OpenFOAM environment
 cd OpenFOAM-6/
 source etc/bashrc 
-# Use custom scotch config file to point to Delft Blue version and location
-cp scotch-config-DelftBlue etc/config.sh/scotch
 
+# Use custom scotch config file to point to Delft Blue version and location
+wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scripts/main/OpenFOAM-6/DelftBlue/scotch-config-DelftBlue
+mv scotch-config-DelftBlue etc/config.sh/scotch
+
+# Compile OpenFOAM-6
 ./Allwmake > build.log 2>&1 &
