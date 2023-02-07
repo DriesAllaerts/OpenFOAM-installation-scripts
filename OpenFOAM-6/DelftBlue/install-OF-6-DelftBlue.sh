@@ -8,31 +8,30 @@ mkdir -p $inst_loc
 cd $inst_loc
 
 # Get OpenFOAM-6
-git clone https://github.com/OpenFOAM/OpenFOAM-6.git
+if [ ! -d "OpenFOAM-6"]; then
+    echo Cloning OpenFOAM-6 git repository
+    git clone https://github.com/OpenFOAM/OpenFOAM-6.git
+else
+    echo OpenFOAM-6 directory already exists
+fi
 
-# Load relevant modules
-module load 2022r2
-module load openmpi
-module load cgal
-module load boost
-module load mpfr
-module load readline
-module load scotch
-module load flex
-module load gmp
-
+# Download OpenFOAM environment script
+wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scripts/main/OpenFOAM-6/DelftBlue/OF-6-env-DelftBlue
+mkdir etc
+mv OF-6-env-DelftBlue etc/OF-6-env-DelftBlue
 # Launch OpenFOAM environment
-cd OpenFOAM-6/
-source etc/bashrc 
+source etc/OF-6-env-DelftBlue
+OpenFOAM-6-env
 
 # Use custom scotch config file to point to Delft Blue version and location
 wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scripts/main/OpenFOAM-6/DelftBlue/scotch-config-DelftBlue
-mv scotch-config-DelftBlue etc/config.sh/scotch
+mv scotch-config-DelftBlue OpenFOAM-6/etc/config.sh/scotch
 
 # Compile OpenFOAM-6
 echo Compiling OpenFOAM
 echo ------------------
-echo Running compilation in the background
+echo Running compilation in the background, this make up to a few hours
 echo Check with $ jobs and abort with $ kill
 echo See progress with tail -f build.log
+cd OpenFOAM-6/
 ./Allwmake > build.log 2>&1 &

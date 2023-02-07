@@ -1,0 +1,58 @@
+#!/bin/bash
+OpenFOAM-6-env()
+{
+   # Important locations.
+   export inst_loc=$HOME/OpenFOAM
+   export sowfa_loc=$HOME/OpenFOAM
+
+   # Load relevant modules.
+   echo "Loading modules..."
+   module load 2022r2
+   module load openmpi
+   module load cgal
+   module load boost
+   module load mpfr
+   module load readline
+   module load scotch
+   module load flex
+   module load gmp
+   module list
+
+   # Unset OpenFOAM environment variables.
+   if [ -z "$FOAM_INST_DIR" ]; then
+      echo "Nothing to unset..."
+   else
+      echo "     *Unsetting OpenFOAM environment variables..."
+      if [ -f "$FOAM_INST_DIR/OpenFOAM-$OPENFOAM_VERSION/etc/config.sh/unset" ]; then
+         . $FOAM_INST_DIR/OpenFOAM-$OPENFOAM_VERSION/etc/config.sh/unset
+      else
+         . $FOAM_INST_DIR/OpenFOAM-$OPENFOAM_VERSION/etc/config/unset.sh
+      fi
+   fi
+
+   # Set the OpenFOAM version and installation directory
+   export OPENFOAM_VERSION=6
+   export OPENFOAM_NAME=OpenFOAM-$OPENFOAM_VERSION
+   export FOAM_INST_DIR=$inst_loc
+   export WM_PROJECT_USER_DIR=/home/$USER/$USER-$OPENFOAM_VERSION
+   export FOAMY_HEX_MESH=true
+   
+   # Source the OpenFOAM main environment.
+   foamDotFile=$FOAM_INST_DIR/$OPENFOAM_NAME/etc/bashrc
+   if [ -f $foamDotFile ] ; then
+      echo "Sourcing $foamDotFile..."
+      source $foamDotFile
+   fi
+
+   # For wmake compiling.
+   export WM_NCOMPPROCS=24
+   export WM_COLOURS="white blue green cyan red magenta yellow"
+   
+   # Set the SOWFA installation directory.
+   export SOWFA_DIR=$sowfa_loc/SOWFA-$OPENFOAM_VERSION
+   export SOWFA_APPBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/bin
+   export SOWFA_LIBBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/lib
+   export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast/install.gcc
+   export LD_LIBRARY_PATH=$SOWFA_LIBBIN:$OPENFAST_DIR/lib:$LD_LIBRARY_PATH
+   export PATH=$SOWFA_APPBIN:$OPENFAST_DIR/bin:$PATH
+}
