@@ -8,7 +8,7 @@ mkdir -p $inst_loc
 cd $inst_loc
 
 # Get OpenFOAM-6
-if [ ! -d "OpenFOAM-6"]; then
+if [ ! -d "OpenFOAM-6" ]; then
     echo Cloning OpenFOAM-6 git repository
     git clone https://github.com/OpenFOAM/OpenFOAM-6.git
 else
