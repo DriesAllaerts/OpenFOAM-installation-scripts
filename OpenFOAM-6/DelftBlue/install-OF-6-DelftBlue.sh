@@ -15,6 +15,18 @@ else
     echo OpenFOAM-6 directory already exists
 fi
 
+# Some hacks for using system libraries
+#
+# Set scotch version and path
+sed -i -e 's/SCOTCH_VERSION=scotch_6.0.6/SCOTCH_VERSION=scotch_6.1.1/g' OpenFOAM-6/etc/config.sh/scotch
+sed -i -e 's/SCOTCH_ARCH_PATH=$WM_THIRD_PARTY_DIR\/platforms\/$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION\/$SCOTCH_VERSION/SCOTCH_ARCH_PATH=$SCOTCH_ROOT/g' OpenFOAM-6/etc/config.sh/scotch
+# Set CGAL path
+sed -i -e 's/unset\ CGAL_ARCH_PATH/export CGAL_ARCH_PATH=$CGAL_ROOT/g' OpenFOAM-6/etc/config.sh/CGAL
+# Set library path to mpfr and gmp needed for CGAL
+sed -i -e 's/-L$(MPFR_ARCH_PATH)\/lib$(WM_COMPILER_LIB_ARCH)/-L$(MPFR_ARCH_PATH)\/lib/g' OpenFOAM-6/wmake/rules/General/CGAL
+sed -i -e 's/-L$(GMP_ARCH_PATH)\/lib$(WM_COMPILER_LIB_ARCH)/-L$(GMP_ARCH_PATH)\/lib/g' OpenFOAM-6/wmake/rules/General/CGAL
+
+
 # Download OpenFOAM environment script
 wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scripts/main/OpenFOAM-6/DelftBlue/OF-6-env-DelftBlue
 mkdir etc
@@ -22,10 +34,6 @@ mv OF-6-env-DelftBlue etc/OF-6-env-DelftBlue
 # Launch OpenFOAM environment
 source etc/OF-6-env-DelftBlue
 OpenFOAM-6-env
-
-# Use custom scotch config file to point to Delft Blue version and location
-wget https://raw.githubusercontent.com/DriesAllaerts/OpenFOAM-installation-scripts/main/OpenFOAM-6/DelftBlue/scotch-config-DelftBlue
-mv scotch-config-DelftBlue OpenFOAM-6/etc/config.sh/scotch
 
 # Compile OpenFOAM-6
 echo Compiling OpenFOAM

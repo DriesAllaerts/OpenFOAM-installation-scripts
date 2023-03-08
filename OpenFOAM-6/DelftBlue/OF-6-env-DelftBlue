@@ -36,7 +36,11 @@ OpenFOAM-6-env()
    export FOAM_INST_DIR=$inst_loc
    export WM_PROJECT_USER_DIR=/home/$USER/$USER-$OPENFOAM_VERSION
    export FOAMY_HEX_MESH=true
-   
+  
+   # Set paths to mpfr and gmp libraries
+   export GMP_ARCH_PATH=$GMP_ROOT
+   export MPFR_ARCH_PATH=$MPFR_ROOT
+    
    # Source the OpenFOAM main environment.
    foamDotFile=$FOAM_INST_DIR/$OPENFOAM_NAME/etc/bashrc
    if [ -f $foamDotFile ] ; then
