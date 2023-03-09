@@ -24,9 +24,10 @@ fi
 source etc/OF-6-env-DelftBlue
 OpenFOAM-6-env
 
-# SOWFA-6 is still in development stage, so check out the dev branch of the git repository
+# SOWFA-6 is still in development stage, so check out dev branch or a certain commit of the git repository
 cd $SOWFA_DIR
-git checkout dev
+#git checkout dev #dev branch contains the latest updates
+git checkout ad09c15 #last stable commit that works without OpenFAST
 
 # Compile SOWFA-6
 echo Compiling SOWFA-6
